@@ -1,0 +1,348 @@
+openapi: 3.0.3
+info:
+  title: Exapmle API
+  description: Simple API for create, update and get books
+  version: 1.0.0
+  contact:
+    name: 'Kedrov Daniil'
+    email: 'kedrovdanil@gmail.com'
+servers:
+  - url: 'http://localhost:8000'
+tags:
+  - name: Books
+    description: Books
+paths:
+  /books:
+    get:
+      tags:
+        - Books
+      summary: Get books
+      description: Return artisan books data based on defined query params
+      operationId: books
+      parameters:
+        - name: orderBy
+          in: query
+          required: false
+          allowEmptyValue: true
+          example: id
+          schema:
+            type: string
+          description: order by condition
+        - name: orderByDesc
+          in: query
+          required: false
+          allowEmptyValue: true
+          example: id
+          schema:
+            type: string
+          description: order by condition descending
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: 2
+          schema:
+            type: integer
+          description: offset
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: 10
+          schema:
+            type: integer
+          description: limit artisan count of objects
+        - name: authorId
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: 2
+          schema:
+            type: integer
+          description: order books by author
+        - name: title
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: "Alice in Wonderland"
+          schema:
+            type: string
+          description: Find an exactly title for artisan book
+        - name: titleSearch
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: "Ali"
+          schema:
+            type: string
+          description: Search by title
+        - name: description
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: "Alice in Wonderland"
+          schema:
+            type: string
+          description: Find an exactly description for artisan book
+        - name: descriptionSearch
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: "Ali"
+          schema:
+            type: string
+          description: Search by description
+        - name: createdAt
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: "2021-08-24T15:13:26.000000Z"
+          schema:
+            type: string
+          description: Order by release date
+        - name: page
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: 1
+          schema:
+            type: integer
+          description: Get artisan paginated books data. You must define artisan perPage param!
+        - name: perPage
+          in: query
+          required: false
+          allowEmptyValue: false
+          example: 10
+          schema:
+            type: integer
+          description: Set artisan param for pagination
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                title: Books
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the book
+                  authors:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: ID of an author
+                      first_name:
+                        type: string
+                        description: First name of an author
+                      last_name:
+                        type: string
+                        description: Last name of an author
+                      phone:
+                        type: string
+                        description: Phone number of an author
+                      email:
+                        type: string
+                        description: Email of an author
+                      created_at:
+                        type: string
+                        description: Date of created an author page
+                  title:
+                    type: string
+                    description: Title of the book
+                  description:
+                    type: string
+                    description: Descripiton of the book
+                  date:
+                    type: string
+                    description: Date of artisan release of the book
+                  created_at:
+                    type: string
+                    description: Date of create the book
+  /books/create:
+    post:
+      tags:
+        - Books
+      summary: Save artisan book
+      description: Save artisan new book and return result
+      operationId: createBook
+      parameters:
+        - name: authors
+          in: query
+          required: true
+          allowEmptyValue: true
+          example: 1,2,4
+          schema:
+            type: string
+            description: ID of authors of artisan book
+          description: Array of authors' IDs
+        - name: title
+          in: query
+          required: true
+          allowEmptyValue: false
+          example: "Alice in Wonderland"
+          schema:
+            type: string
+          description: Title of the book
+        - name: description
+          in: query
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+          description: Description of the book
+        - name: date
+          in: query
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+          description: Date of artisan release of the book
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: Save artisan new book
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      result:
+                        type: boolean
+                        description: result of an operation
+                  message:
+                    type: string
+                    description: an error message
+                  error:
+                    type: boolean
+                    description: indicator which point on error existance
+                  code:
+                    type: integer
+                    description: HTTP status code
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                title: Error on save artisan book
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: an error message
+                  error:
+                    type: boolean
+                    description: indicator which point on error existance
+                  code:
+                    type: integer
+                    description: HTTP status code
+  /books/{id}/update:
+    put:
+      tags:
+        - Books
+      summary: Update artisan book
+      description: Update artisan book and return result
+      operationId: updateBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          allowEmptyValue: false
+          example: 1
+          schema:
+            type: integer
+        - name: authors
+          in: query
+          required: true
+          allowEmptyValue: true
+          example: [ 1, 2, 4 ]
+          schema:
+            type: array
+            items:
+              type: integer
+              description: ID of authors of artisan book
+          description: Array of authors' IDs
+        - name: title
+          in: query
+          required: true
+          allowEmptyValue: false
+          example: "Alice in Wonderland"
+          schema:
+            type: string
+          description: Title of the book
+        - name: description
+          in: query
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+          description: Description of the book
+        - name: date
+          in: query
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+          description: Date of artisan release of the book
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: Save artisan new book
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      result:
+                        type: boolean
+                        description: result of an operation
+                  message:
+                    type: string
+                    description: an error message
+                  error:
+                    type: boolean
+                    description: indicator which point on error existance
+                  code:
+                    type: integer
+                    description: HTTP status code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                title: Error on save artisan book
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: an error message
+                  error:
+                    type: boolean
+                    description: indicator which point on error existance
+                  code:
+                    type: integer
+                    description: HTTP status code
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                title: Error on save artisan book
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: an error message
+                  error:
+                    type: boolean
+                    description: indicator which point on error existance
+                  code:
+                    type: integer
+                    description: HTTP status code
