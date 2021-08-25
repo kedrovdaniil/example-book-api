@@ -23,7 +23,7 @@ class BookFactory extends Factory
     {
         return [
             'title' => $this->faker->jobTitle,
-            'description' => $this->faker->text,
+            'description' => $this->faker->sentence(3),
             'date' => now(),
             'created_at' => now(),
             'updated_at' => now()

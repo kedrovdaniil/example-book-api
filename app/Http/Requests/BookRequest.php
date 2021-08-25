@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class BookRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class BookRequest extends FormRequest
     public function rules()
     {
         return [
-            'authors' => 'required|array',
+            'authors' => 'required|string',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'date' => 'required'

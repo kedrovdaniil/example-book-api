@@ -18,7 +18,7 @@ trait ResponseAPI
         // Check params
         if (!$message) return response()->json(['message' => 'Message is required'], 500);
 
-        // Send artisan response
+        // Send a response
         if ($isSuccess) {
             return response()->json([
                 'message' => $message,
@@ -36,14 +36,14 @@ trait ResponseAPI
     }
 
     /**
-     * Send artisan success response
+     * Send a success response
      *
      * @param $message
      * @param $data
      * @param int $statusCode
      * @return \Illuminate\Http\JsonResponse
      */
-    public function successResponse($data, $message = "OK", $statusCode = 200)
+    public function successResponse($data = null, $message = "OK", $statusCode = 200)
     {
         return $this->coreResponse($message, $data, $statusCode);
     }

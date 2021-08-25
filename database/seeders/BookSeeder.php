@@ -20,7 +20,7 @@ class BookSeeder extends Seeder
         Book::truncate();
 
         // Seed new rows
-        Book::factory()->times(25)->create();
+        Book::factory()->times(14)->create();
 
         // Seed artisan pivot table ('author_book')
         AuthorBook::truncate();

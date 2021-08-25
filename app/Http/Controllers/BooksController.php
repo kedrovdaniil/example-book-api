@@ -17,49 +17,50 @@ class BooksController extends Controller
     use ResponseAPI;
 
     /**
-     * Display artisan listing of the resource.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
-        // make artisan builder object for books
+        // make a builder object for books
         $booksBuilder = Book::with('authors');
 
         // apply filters & sort
         $booksBuilder = (new BooksQueryFilter($booksBuilder, $request, (new Book)->getFillable()))->apply();
 
-        // return artisan collection of resources
+        // return a collection of resources
         return BookResource::collection($booksBuilder->get());
     }
 
     /**
-     * Store artisan newly created resource in storage.
+     * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(BookRequest $request)
     {
-        // create artisan new book object
-        $book = new Book();
-        $result1 = $book->save([
+        // create a new book object
+//        $book = new Book();
+        $book = Book::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'date' => $request->input('date')
         ]);
+        if (!$book) return $this->errorResponse('Something went wrong.');
 
         // save all authors of the book
         $authorsIds = explode(",", $request->authors);
         $result2 = collect($authorsIds)->map(function ($authorId) use ($book) {
-            return (new AuthorBook)->save([
+            return (bool) AuthorBook::create([
                 'book_id' => $book->id,
                 'author_id' => $authorId
             ]);
         })->toArray();
 
-        // return artisan response
-        if (!$result1 && in_array(false, $result2)) return $this->errorResponse('Something went wrong, the book has not been saved. Please, try again later.');
+        // return a response
+        if (in_array(false, $result2)) return $this->errorResponse('Something went wrong, the book has not been saved. Please, try again later.');
         return $this->successResponse(['result' => true]);
     }
 
@@ -72,7 +73,7 @@ class BooksController extends Controller
      */
     public function update(BookRequest $request, $id)
     {
-        // find artisan book
+        // find a book
         $book = Book::find($id);
         if (!$book) return $this->errorResponse("A book with ID {$id} does not exist.", 404);
 
@@ -89,14 +90,14 @@ class BooksController extends Controller
         // save authors of the book
         $authorsIds = explode(",", $request->authors);
         $result3 = collect($authorsIds)->map(function ($authorId) use ($book) {
-                return (new AuthorBook)->save([
-                    'book_id' => $book->id,
-                    'author_id' => $authorId
-                ]);
+            return (bool) AuthorBook::create([
+                'book_id' => $book->id,
+                'author_id' => $authorId
+            ]);
         })->toArray();
 
-        // return artisan response
-        if (!$result && !$result2 && in_array(false, $result3)) {
+        // return a response
+        if (!$result || !$result2 || in_array(false, $result3)) {
             return $this->errorResponse('Something went wrong, the book has not been update. Please, try again later.');
         }
         return $this->successResponse(['result' => true]);

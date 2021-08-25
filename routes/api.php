@@ -23,4 +23,4 @@ Route::get("/books", [BooksController::class, 'index']);
 // create artisan book
 Route::post("/books/create", [BooksController::class, 'store']);
 // update artisan book
-Route::put("/books/{id}/update", [BooksController::class, 'update']);
+Route::post("/books/{id}/update", [BooksController::class, 'update']);

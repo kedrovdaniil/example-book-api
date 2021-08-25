@@ -16,4 +16,6 @@ class AuthorBook extends Pivot
         'author_id',
         'book_id'
     ];
+
+    public $timestamps = false;
 }

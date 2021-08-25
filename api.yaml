@@ -12,14 +12,15 @@ tags:
   - name: Books
     description: Books
 paths:
-  /books:
+  /{version}/books:
     get:
       tags:
         - Books
       summary: Get books
-      description: Return artisan books data based on defined query params
+      description: Return a books data based on defined query params
       operationId: books
       parameters:
+        - $ref: '#/components/parameters/version'
         - name: orderBy
           in: query
           required: false
@@ -51,7 +52,7 @@ paths:
           example: 10
           schema:
             type: integer
-          description: limit artisan count of objects
+          description: limit a count of objects
         - name: authorId
           in: query
           required: false
@@ -67,7 +68,7 @@ paths:
           example: "Alice in Wonderland"
           schema:
             type: string
-          description: Find an exactly title for artisan book
+          description: Find an exactly title for a book
         - name: titleSearch
           in: query
           required: false
@@ -83,7 +84,7 @@ paths:
           example: "Alice in Wonderland"
           schema:
             type: string
-          description: Find an exactly description for artisan book
+          description: Find an exactly description for a book
         - name: descriptionSearch
           in: query
           required: false
@@ -107,7 +108,7 @@ paths:
           example: 1
           schema:
             type: integer
-          description: Get artisan paginated books data. You must define artisan perPage param!
+          description: Get a paginated books data. You must define a perPage param!
         - name: perPage
           in: query
           required: false
@@ -115,7 +116,7 @@ paths:
           example: 10
           schema:
             type: integer
-          description: Set artisan param for pagination
+          description: Set a param for pagination
       responses:
         '200':
           description: "OK"
@@ -128,26 +129,28 @@ paths:
                     type: integer
                     description: ID of the book
                   authors:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        description: ID of an author
-                      first_name:
-                        type: string
-                        description: First name of an author
-                      last_name:
-                        type: string
-                        description: Last name of an author
-                      phone:
-                        type: string
-                        description: Phone number of an author
-                      email:
-                        type: string
-                        description: Email of an author
-                      created_at:
-                        type: string
-                        description: Date of created an author page
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID of an author
+                        first_name:
+                          type: string
+                          description: First name of an author
+                        last_name:
+                          type: string
+                          description: Last name of an author
+                        phone:
+                          type: string
+                          description: Phone number of an author
+                        email:
+                          type: string
+                          description: Email of an author
+                        created_at:
+                          type: string
+                          description: Date of created an author page
                   title:
                     type: string
                     description: Title of the book
@@ -156,18 +159,19 @@ paths:
                     description: Descripiton of the book
                   date:
                     type: string
-                    description: Date of artisan release of the book
+                    description: Date of a release of the book
                   created_at:
                     type: string
                     description: Date of create the book
-  /books/create:
+  /{version}/books/create:
     post:
       tags:
         - Books
-      summary: Save artisan book
-      description: Save artisan new book and return result
+      summary: Save a book
+      description: Save a new book and return result
       operationId: createBook
       parameters:
+        - $ref: '#/components/parameters/version'
         - name: authors
           in: query
           required: true
@@ -175,7 +179,7 @@ paths:
           example: 1,2,4
           schema:
             type: string
-            description: ID of authors of artisan book
+            description: ID of authors of a book
           description: Array of authors' IDs
         - name: title
           in: query
@@ -198,14 +202,14 @@ paths:
           allowEmptyValue: false
           schema:
             type: string
-          description: Date of artisan release of the book
+          description: Date of a release of the book
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                title: Save artisan new book
+                title: Save a new book
                 type: object
                 properties:
                   data:
@@ -228,7 +232,7 @@ paths:
           content:
             application/json:
               schema:
-                title: Error on save artisan book
+                title: Error on save a book
                 type: object
                 properties:
                   message:
@@ -240,14 +244,15 @@ paths:
                   code:
                     type: integer
                     description: HTTP status code
-  /books/{id}/update:
-    put:
+  /{version}/books/{id}/update:
+    post:
       tags:
         - Books
-      summary: Update artisan book
-      description: Update artisan book and return result
+      summary: Update a book
+      description: Update a book and return result
       operationId: updateBook
       parameters:
+        - $ref: '#/components/parameters/version'
         - name: id
           in: path
           required: true
@@ -264,7 +269,7 @@ paths:
             type: array
             items:
               type: integer
-              description: ID of authors of artisan book
+              description: ID of authors of a book
           description: Array of authors' IDs
         - name: title
           in: query
@@ -287,14 +292,14 @@ paths:
           allowEmptyValue: false
           schema:
             type: string
-          description: Date of artisan release of the book
+          description: Date of a release of the book
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                title: Save artisan new book
+                title: Save a new book
                 type: object
                 properties:
                   data:
@@ -317,7 +322,7 @@ paths:
           content:
             application/json:
               schema:
-                title: Error on save artisan book
+                title: Error on save a book
                 type: object
                 properties:
                   message:
@@ -334,7 +339,7 @@ paths:
           content:
             application/json:
               schema:
-                title: Error on save artisan book
+                title: Error on save a book
                 type: object
                 properties:
                   message:
@@ -346,3 +351,14 @@ paths:
                   code:
                     type: integer
                     description: HTTP status code
+components:
+  parameters:
+    version:
+      in: path
+      name: version
+      description: Version of API
+      required: true
+      schema:
+        type: string
+        default: v1
+        example: v1

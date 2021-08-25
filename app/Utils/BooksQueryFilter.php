@@ -41,7 +41,7 @@ class BooksQueryFilter {
     }
 
     /**
-     * Get all query params from artisan request
+     * Get all query params from a request
      * @return mixed
      */
     private function filters()
@@ -51,7 +51,7 @@ class BooksQueryFilter {
 
     private function orderBy($value)
     {
-        // check if artisan value for "order by" expression is contains in model's fillable fields
+        // check if a value for "order by" expression is contains in model's fillable fields
         if (!in_array($value, $this->orderByAllowedFields)) return;
 
         $this->builder->orderBy($value);
@@ -59,7 +59,7 @@ class BooksQueryFilter {
 
     private function orderByDesc($value)
     {
-        // check if artisan value for "order by" expression is contains in model's fillable fields
+        // check if a value for "order by" expression is contains in model's fillable fields
         if (!in_array($value, $this->orderByAllowedFields)) return;
 
         $this->builder->orderByDesc($value);
